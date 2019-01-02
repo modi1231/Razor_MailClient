@@ -1,0 +1,201 @@
+﻿@page
+@model Razor_MailClient.Pages.indexModel
+@{
+    ViewData["Title"] = "index";
+}
+@using Microsoft.AspNetCore.Http
+
+
+<style>
+    #EmailList {
+        border-collapse: collapse;
+        /*width: 75%;
+        float: left;*/
+        width: 100%;
+    }
+
+    table, th, td {
+        border: 1px solid black;
+    }
+
+
+    #folderList {
+        /*width: 10%;
+        float: left;
+        margin-right: 20px;
+        padding-right: 10px;
+        background-color: aliceblue;*/
+    }
+
+    #left {
+        width: 10%;
+        float: left;
+        margin-right: 20px;
+        padding-right: 10px;
+        background-color: aliceblue;
+    }
+
+    #right {
+        width: 75%;
+        float: left;
+        background-color: indianred;
+    }
+
+    #read {
+        margin-top: 10px;
+        background-color: lightgreen;
+    }
+    #emailListDiv
+    {
+        /*border:1px solid black;*/
+        padding: 5px;
+    }
+
+    #folderList button {
+        background-color: #4CAF50; /* Green background */
+        border: 1px solid green; /* Green border */
+        color: white; /* White text */
+        /*padding: 10px 24px; /* Some padding */
+        /* cursor: pointer; /* Pointer/hand icon */
+        width: 100%; /* Set a width if needed */
+        display: block; /* Make the buttons appear below each other */
+    }
+
+        #folderList button:not(:last-child) {
+            border-bottom: none; /* Prevent double borders */
+        }
+
+        /* Add a background color on hover */
+        #folderList button:hover {
+            background-color: #3e8e41;
+        }
+
+        #folderList button:disabled {
+            background-color: orange;
+        }
+
+    #send_buttons {
+        padding: 5px;
+        background-color:lightblue;
+    }
+</style>
+
+<h1>Quick Email Client</h1>
+
+<h3>Message: @Model.Message</h3>
+
+<p>#Emails: @Model._emails.Count</p>
+
+<br />
+
+<form method="post">
+    <div id="left">
+        <div id="folderList">
+
+            @for (int i = 0; i < @Model._folders.Count; i++)
+            {
+                @if (Model._folders[i].SELECTED)
+                {
+                    <button disabled>@Model._folders[i].NAME</button>
+                }
+                else
+                {
+                    @*<button>@Model._folders[i].NAME</button><br />*@
+                    <button type="submit" asp-page-handler="FolderSelected" asp-route-folder_id="@Model._folders[i].ID">@Model._folders[i].NAME</button>
+                }
+
+            }
+        </div>
+    </div>
+    <div id="right">
+        <div id="emailListDiv">
+            <div>
+                <label>@Model._active_folder.NAME</label>
+            </div>
+            <table id="EmailList">
+                <thead>
+                    <tr>
+                        <th>
+                            ID
+                        </th>
+                        <th>
+                            FROM
+                        </th>
+                        <th>
+                            SUBJECT
+                        </th>
+                        <th>
+                            DATE_RECEIVED
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < @Model._emails.Count; i++)
+                    {
+                        string _style = Model._emails[i].ID == Model.SELECTED_EMAIL_ID ? "font-weight:bolder;" : null;
+                        
+                        <tr style="@_style" >
+                            <td>
+                                @Model._emails[i].ID
+                            </td>
+                            <td>
+                                @Model._emails[i].FROM
+                            </td>
+                            <td>
+                                @Model._emails[i].SUBJECT
+                            </td>
+                            <td>
+                                @Model._emails[i].DATE_RECEIVED
+                            </td>
+                            <td>
+                                @*<input type="button" name="Delete" value="Delete" asp-page-handler="DeleteEmail" asp-route-ID="@Model._emails[i].ID" /> &nbsp;
+                                    <input type="button" name="Read" value="Read" asp-page-handler="ReadEmail" asp-route-ID="@Model._emails[i].ID" />*@
+                                <button type="submit" asp-page-handler="ReadEmail" asp-route-ID="@Model._emails[i].ID" asp-route-folder_id=@Model._active_folder.ID>Read</button> &nbsp;
+                                <button type="submit" asp-page-handler="DeleteEmail" asp-route-ID="@Model._emails[i].ID">Delete</button> &nbsp;
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+        <div id="send_buttons">
+            <button type="submit" asp-page-handler="NewEmail">New</button> &nbsp;
+
+            @if (Model._readingEmail.ID == -1)
+            {
+                <button type="submit" asp-page-handler="SendEmail">Send</button>
+            }
+            else
+            {
+                <button disabled>Send</button>
+            }
+
+        </div>
+        <div id="read">
+
+            @Html.LabelFor(x => @Model._readingEmail.ID)    @Html.TextBoxFor(x => @Model._readingEmail.ID, (Model._readingEmail.ID != -1) ? (object)new { @disabled = "true" } : new { }) <br />
+            @Html.LabelFor(x => @Model._readingEmail.TO) @Html.TextBoxFor(x => @Model._readingEmail.TO, (Model._readingEmail.ID != -1) ? (object)new { @disabled = "true" } : new { })<br />
+            @Html.LabelFor(x => @Model._readingEmail.FROM) @Html.TextBoxFor(x => @Model._readingEmail.FROM, (Model._readingEmail.ID != -1) ? (object)new { @disabled = "true" } : new { })<br />
+            @Html.LabelFor(x => @Model._readingEmail.DATE_RECEIVED) @Html.TextBoxFor(x => @Model._readingEmail.DATE_RECEIVED, (Model._readingEmail.ID != -1) ? (object)new { @disabled = "true" } : new { })<br />
+            <hr />
+            @Html.LabelFor(x => @Model._readingEmail.SUBJECT) @Html.TextBoxFor(x => @Model._readingEmail.SUBJECT, (Model._readingEmail.ID != -1) ? (object)new { @disabled = "true" } : new { })<br />
+            <hr />
+            @Html.LabelFor(x => @Model._readingEmail.BODY)<br /> @Html.TextAreaFor(x => @Model._readingEmail.BODY, new Dictionary<string, object>() {
+                                                                { "rows" , "7" },
+                                                                { "cols" , "80"} ,
+                                                                { (Model._readingEmail.ID != -1) ? "disabled": "data-notdisabled" , "disabled" }
+                                                            })<br />
+
+            @*@Html.LabelFor(x => @Model._readingEmail.TO) @Html.TextBoxFor(x => @Model._readingEmail.TO, new { @disabled = "true" })<br />
+            @Html.LabelFor(x => @Model._readingEmail.FROM) @Html.TextBoxFor(x => @Model._readingEmail.FROM, new { @disabled = "true" })<br />
+            @Html.LabelFor(x => @Model._readingEmail.DATE_RECEIVED) @Html.TextBoxFor(x => @Model._readingEmail.DATE_RECEIVED, new { @disabled = "true" })<br />
+            <hr />
+            @Html.LabelFor(x => @Model._readingEmail.SUBJECT) @Html.TextBoxFor(x => @Model._readingEmail.SUBJECT, new { @disabled = "true" })<br />
+            <hr />
+            @Html.LabelFor(x => @Model._readingEmail.BODY)<br /> @Html.TextAreaFor(x => @Model._readingEmail.BODY, new { @disabled = "true", rows = "7", cols = "80" })<br />*@
+
+        </div>
+    </div>
+</form>
