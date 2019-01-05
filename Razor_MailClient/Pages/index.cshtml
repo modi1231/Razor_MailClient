@@ -15,7 +15,7 @@
     }
 
     table, th, td {
-        border: 1px solid black;
+        //border: 1px solid black;
     }
 
 
@@ -45,8 +45,8 @@
         margin-top: 10px;
         background-color: lightgreen;
     }
-    #emailListDiv
-    {
+
+    #emailListDiv {
         /*border:1px solid black;*/
         padding: 5px;
     }
@@ -76,7 +76,7 @@
 
     #send_buttons {
         padding: 5px;
-        background-color:lightblue;
+        background-color: lightblue;
     }
 </style>
 
@@ -112,13 +112,13 @@
             <div>
                 <label>@Model._active_folder.NAME</label>
             </div>
-            <table id="EmailList">
+            <table id="EmailList" class="table">
                 <thead>
                     <tr>
-                        <th>
+                        <th scope="col">
                             ID
                         </th>
-                        <th>
+                        <th scope="col">
                             FROM
                         </th>
                         <th>
@@ -134,8 +134,8 @@
                     @for (int i = 0; i < @Model._emails.Count; i++)
                     {
                         string _style = Model._emails[i].ID == Model.SELECTED_EMAIL_ID ? "font-weight:bolder;" : null;
-                        
-                        <tr style="@_style" >
+
+                        <tr style="@_style">
                             <td>
                                 @Model._emails[i].ID
                             </td>
@@ -151,8 +151,8 @@
                             <td>
                                 @*<input type="button" name="Delete" value="Delete" asp-page-handler="DeleteEmail" asp-route-ID="@Model._emails[i].ID" /> &nbsp;
                                     <input type="button" name="Read" value="Read" asp-page-handler="ReadEmail" asp-route-ID="@Model._emails[i].ID" />*@
-                                <button type="submit" asp-page-handler="ReadEmail" asp-route-ID="@Model._emails[i].ID" asp-route-folder_id=@Model._active_folder.ID>Read</button> &nbsp;
-                                <button type="submit" asp-page-handler="DeleteEmail" asp-route-ID="@Model._emails[i].ID">Delete</button> &nbsp;
+                                <button class="btn btn-default" type="submit" asp-page-handler="ReadEmail" asp-route-ID="@Model._emails[i].ID" asp-route-folder_id=@Model._active_folder.ID>Read</button> &nbsp;
+                                <button class="btn btn-default" type="submit" asp-page-handler="DeleteEmail" asp-route-ID="@Model._emails[i].ID">Delete</button> &nbsp;
                             </td>
                         </tr>
                     }
@@ -161,41 +161,114 @@
             </table>
         </div>
         <div id="send_buttons">
-            <button type="submit" asp-page-handler="NewEmail">New</button> &nbsp;
+            <button class="btn btn-default" type="submit" asp-page-handler="NewEmail">New</button> &nbsp;
 
             @if (Model._readingEmail.ID == -1)
             {
-                <button type="submit" asp-page-handler="SendEmail">Send</button>
+                <button class="btn btn-default" type="submit" asp-page-handler="SendEmail">Send</button>
             }
             else
             {
-                <button disabled>Send</button>
+                <button class="btn btn-default" disabled>Send</button>
             }
 
         </div>
-        <div id="read">
 
-            @Html.LabelFor(x => @Model._readingEmail.ID)    @Html.TextBoxFor(x => @Model._readingEmail.ID, (Model._readingEmail.ID != -1) ? (object)new { @disabled = "true" } : new { }) <br />
-            @Html.LabelFor(x => @Model._readingEmail.TO) @Html.TextBoxFor(x => @Model._readingEmail.TO, (Model._readingEmail.ID != -1) ? (object)new { @disabled = "true" } : new { })<br />
-            @Html.LabelFor(x => @Model._readingEmail.FROM) @Html.TextBoxFor(x => @Model._readingEmail.FROM, (Model._readingEmail.ID != -1) ? (object)new { @disabled = "true" } : new { })<br />
-            @Html.LabelFor(x => @Model._readingEmail.DATE_RECEIVED) @Html.TextBoxFor(x => @Model._readingEmail.DATE_RECEIVED, (Model._readingEmail.ID != -1) ? (object)new { @disabled = "true" } : new { })<br />
-            <hr />
-            @Html.LabelFor(x => @Model._readingEmail.SUBJECT) @Html.TextBoxFor(x => @Model._readingEmail.SUBJECT, (Model._readingEmail.ID != -1) ? (object)new { @disabled = "true" } : new { })<br />
-            <hr />
-            @Html.LabelFor(x => @Model._readingEmail.BODY)<br /> @Html.TextAreaFor(x => @Model._readingEmail.BODY, new Dictionary<string, object>() {
-                                                                { "rows" , "7" },
-                                                                { "cols" , "80"} ,
-                                                                { (Model._readingEmail.ID != -1) ? "disabled": "data-notdisabled" , "disabled" }
-                                                            })<br />
+        <div id="read" class="container">
+            !!! Rest of the 'news' needs to be list like the email box.
+            <br />
+            @*@Html.LabelFor(x => @Model._readingEmail.ID)    @Html.TextBoxFor(x => @Model._readingEmail.ID, (Model._readingEmail.ID != -1) ? (object)new { @disabled = "true" } : new { }) <br />*@
+            @*@Html.LabelFor(x => @Model._readingEmail.TO) @Html.TextBoxFor(x => @Model._readingEmail.TO, (Model._readingEmail.ID != -1) ? (object)new { @disabled = "true" } : new { })<br />
+                @Html.LabelFor(x => @Model._readingEmail.FROM) @Html.TextBoxFor(x => @Model._readingEmail.FROM, (Model._readingEmail.ID != -1) ? (object)new { @disabled = "true" } : new { })<br />
+                @Html.LabelFor(x => @Model._readingEmail.DATE_RECEIVED) @Html.TextBoxFor(x => @Model._readingEmail.DATE_RECEIVED, (Model._readingEmail.ID != -1) ? (object)new { @disabled = "true" } : new { })<br />
+                <hr />
+                @Html.LabelFor(x => @Model._readingEmail.SUBJECT) @Html.TextBoxFor(x => @Model._readingEmail.SUBJECT, (Model._readingEmail.ID != -1) ? (object)new { @disabled = "true" } : new { })<br />
+                <hr />*@
 
+
+            <div class="row">
+                <div class="col-xs-7">
+                    @Html.LabelFor(x => @Model._readingEmail.ID, new { @class = "badge badge-default" })
+                </div>
+                <div class="col-xs-5">
+                    @Html.TextBoxFor(x => @Model._readingEmail.ID, new Dictionary<string, object>()
+{{(Model._readingEmail.ID != -1) ? "disabled": "data-notdisabled" , "disabled" },
+{ "class","form-control" }})
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-xs-6">
+                    @Html.LabelFor(x => @Model._readingEmail.TO, new { @class = "badge badge-default" })
+                </div>
+                <div class="col-xs-6">
+                    @Html.TextBoxFor(x => @Model._readingEmail.TO, new Dictionary<string, object>()
+{{(Model._readingEmail.ID != -1) ? "disabled": "data-notdisabled" , "disabled" },
+{ "class","form-control" }})
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-6">
+                    @Html.LabelFor(x => @Model._readingEmail.FROM, new { @class = "badge badge-default" })
+                </div>
+                <div class="col-xs-6">
+                    @Html.TextBoxFor(x => @Model._readingEmail.FROM, new Dictionary<string, object>()
+{{(Model._readingEmail.ID != -1) ? "disabled": "data-notdisabled" , "disabled" },
+{ "class","form-control" }})
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-6">
+                    @Html.LabelFor(x => @Model._readingEmail.DATE_RECEIVED, new { @class = "badge badge-default" })
+                </div>
+                <div class="col-xs-6">
+                    @Html.TextBoxFor(x => @Model._readingEmail.DATE_RECEIVED, new Dictionary<string, object>()
+{{(Model._readingEmail.ID != -1) ? "disabled": "data-notdisabled" , "disabled" },
+{ "class","form-control" }})
+                </div>
+            </div>
+            <hr />
+
+            <div class="row">
+                <div class="col-xs-6">
+                    @Html.LabelFor(x => @Model._readingEmail.SUBJECT, new { @class = "badge badge-default" })
+                </div>
+                <div class="col-xs-6">
+                    @Html.TextBoxFor(x => @Model._readingEmail.SUBJECT, new Dictionary<string, object>()
+{{(Model._readingEmail.ID != -1) ? "disabled": "data-notdisabled" , "disabled" },
+{ "class","form-control" }})
+                </div>
+            </div>
+            <hr />
+
+            <div class="row">
+                <div class="col-xs-6">
+                    @Html.LabelFor(x => @Model._readingEmail.BODY, new { @class = "badge badge-default" })
+                </div>
+                <div class="col-xs-6">
+                    @Html.TextAreaFor(x => @Model._readingEmail.BODY, new Dictionary<string, object>()
+{{ "rows" , "7" },
+{ "cols" , "80"} ,
+{ (Model._readingEmail.ID != -1) ? "disabled": "data-notdisabled" , "disabled" },
+{"class", "form-control"  }
+})
+                </div>
+            </div>
+
+            <br />
+            <br />
             @*@Html.LabelFor(x => @Model._readingEmail.TO) @Html.TextBoxFor(x => @Model._readingEmail.TO, new { @disabled = "true" })<br />
-            @Html.LabelFor(x => @Model._readingEmail.FROM) @Html.TextBoxFor(x => @Model._readingEmail.FROM, new { @disabled = "true" })<br />
-            @Html.LabelFor(x => @Model._readingEmail.DATE_RECEIVED) @Html.TextBoxFor(x => @Model._readingEmail.DATE_RECEIVED, new { @disabled = "true" })<br />
-            <hr />
-            @Html.LabelFor(x => @Model._readingEmail.SUBJECT) @Html.TextBoxFor(x => @Model._readingEmail.SUBJECT, new { @disabled = "true" })<br />
-            <hr />
-            @Html.LabelFor(x => @Model._readingEmail.BODY)<br /> @Html.TextAreaFor(x => @Model._readingEmail.BODY, new { @disabled = "true", rows = "7", cols = "80" })<br />*@
+                @Html.LabelFor(x => @Model._readingEmail.FROM) @Html.TextBoxFor(x => @Model._readingEmail.FROM, new { @disabled = "true" })<br />
+                @Html.LabelFor(x => @Model._readingEmail.DATE_RECEIVED) @Html.TextBoxFor(x => @Model._readingEmail.DATE_RECEIVED, new { @disabled = "true" })<br />
+                <hr />
+                @Html.LabelFor(x => @Model._readingEmail.SUBJECT) @Html.TextBoxFor(x => @Model._readingEmail.SUBJECT, new { @disabled = "true" })<br />
+                <hr />
+                @Html.LabelFor(x => @Model._readingEmail.BODY)<br /> @Html.TextAreaFor(x => @Model._readingEmail.BODY, new { @disabled = "true", rows = "7", cols = "80" })<br />*@
 
         </div>
     </div>
+
 </form>

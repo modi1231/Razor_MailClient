@@ -3,6 +3,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Razor_MailClient.Data
 {
+    /// <summary>
+    /// Definining the base components of an 'email'.
+    /// Could be expanded to include header, addresses, known names, etc.
+    /// </summary>
     public class Email
     {
         public int ID { get; set; }

@@ -18,9 +18,23 @@ read emails in popup
 -x- -- send only enabled when new clicked.
 -x- enable/disable single email read/send
 
--- mail client test connect
--- db connect?
--- make pretty  pretty tables https://datatables.net/manual/installation
+    less about connecting and more about the web front end.
+    expanding: 
+use ajax
+db to stash emails
+imap/smtp to get emails 
+-no- mail client test connect
+https://github.com/pmengal/MailSystem.NET
+https://code.msdn.microsoft.com/windowsdesktop/Simple-IMAP-CLIENT-b249d2e6
+-no- db connect?
+-no!- make pretty  pretty tables https://datatables.net/manual/installation
+-x- Rest of the 'news' needs to be list like the email box.
+
+!! in clude npm/gulp install bit
+--https://blog.bitscry.com/2018/03/13/using-npm-and-gulp-in-visual-studio-2017/
+-- install powershell tools
+-- install nodejs
+-- run npm install gulp -g
 */
 //
 namespace Razor_MailClient.Pages
@@ -36,21 +50,22 @@ namespace Razor_MailClient.Pages
 
         [BindProperty]
         public Email _readingEmail { get; set; }
-
-        //        public string _activeFolder { get; set; }
-
-        //    [BindProperty]
+        
         public int SELECTED_EMAIL_ID { get; set; }
 
-        //[BindProperty]
         public Folder _active_folder { get; set; }
 
+        /// <summary>
+        /// Single reusable page, but with some post actions information must be given to itself.  Emails that are active, folders, etc.  Could be expaned with Ajax.
+        /// </summary>
+        /// <param name="id_email"></param>
+        /// <param name="id_folder"></param>
+        /// <returns></returns>
         public async Task OnGetAsync(int id_email, int id_folder)
         {
             DataAccess data = new DataAccess();
 
             _emails = await data.LoadEmailListAsync(id_folder);
-            //            _folders = await data.LoadFolderListAsync();
 
             await LoadFoldersAsync(id_folder);
 
@@ -69,6 +84,12 @@ namespace Razor_MailClient.Pages
             }
         }
 
+        /// <summary>
+        /// What occurs when an email is being read.  
+        /// </summary>
+        /// <param name="ID">email id</param>
+        /// <param name="folder_id">current selected folder</param>
+        /// <returns></returns>
         public async Task<IActionResult> OnPostReadEmailAsync(int ID, int folder_id)
         {
             DataAccess data = new DataAccess();
@@ -78,7 +99,11 @@ namespace Razor_MailClient.Pages
 
             return RedirectToPage("/Index", new { id_email = temp.ID, id_folder = folder_id });
         }
-
+        /// <summary>
+        /// Delete a specific email.
+        /// </summary>
+        /// <param name="ID">email id</param>
+        /// <returns></returns>
         public async Task<IActionResult> OnPostDeleteEmailAsync(int ID)
         {
             DataAccess data = new DataAccess();
@@ -89,12 +114,21 @@ namespace Razor_MailClient.Pages
             return RedirectToPage("/Index");
         }
 
+        /// <summary>
+        /// Show the specific email in the details body.
+        /// </summary>
+        /// <param name="ID">email id</param>
+        /// <returns></returns>
         private async Task<Email> ReadEmail(int ID)
         {
             DataAccess data = new DataAccess();
             return await data.ReadEmailAsync(ID);
         }
-
+        /// <summary>
+        /// Obtain a list of the folders.. could be expanded with spam, sub folders, etc.
+        /// </summary>
+        /// <param name="selected_folder"></param>
+        /// <returns></returns>
         private async Task LoadFoldersAsync(int selected_folder = 0)
         {
             DataAccess data = new DataAccess();
@@ -108,6 +142,12 @@ namespace Razor_MailClient.Pages
             }
         }
 
+        /// <summary>
+        /// Send the new 'selected folder' to the form's on get.  
+        /// -- Could be subplanted with ajax.
+        /// </summary>
+        /// <param name="folder_id"></param>
+        /// <returns></returns>
         public async Task<IActionResult> OnPostFolderSelectedAsync(int folder_id)
         {
 
@@ -119,14 +159,22 @@ namespace Razor_MailClient.Pages
             return RedirectToPage("/Index", new { id_folder = folder_id });
         }
 
+        /// <summary>
+        /// Vehicle to send the id to the form's 'on get'
+        /// -- Could be subplanted with ajax.
+        /// </summary>
+        /// <returns></returns>
         public IActionResult OnPostNewEmail()
         {
             Message = "New Read";
 
             return RedirectToPage("/Index", new { id_email = -1 });
-
         }
 
+        /// <summary>
+        /// Take the user information typed and 'send' it.
+        /// </summary>
+        /// <returns></returns>
         public async Task<IActionResult> OnPostSendEmailAsync()
         {
             Message = "Sending Email.";

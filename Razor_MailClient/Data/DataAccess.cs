@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace Razor_MailClient.Data
 {
+    /// <summary>
+    /// Nuts and bolts of the actions. Reading, deleting, sending, etc.
+    /// </summary>
     public class DataAccess
     {
         public async Task<List<Email>> LoadEmailListAsync(int id_folder)
