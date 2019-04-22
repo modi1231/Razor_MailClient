@@ -6,37 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Razor_MailClient.Data;
 
-/* menu buttons top
--x- list of folders/inbox to the left
--x- content listed in the center
-read emails in popup
--x- active folder
--x- active email bolding
--x- reading pane
--x- send email
--x- -- new button
--x- -- send only enabled when new clicked.
--x- enable/disable single email read/send
-
-    less about connecting and more about the web front end.
-    expanding: 
-use ajax
-db to stash emails
-imap/smtp to get emails 
--no- mail client test connect
-https://github.com/pmengal/MailSystem.NET
-https://code.msdn.microsoft.com/windowsdesktop/Simple-IMAP-CLIENT-b249d2e6
--no- db connect?
--no!- make pretty  pretty tables https://datatables.net/manual/installation
--x- Rest of the 'news' needs to be list like the email box.
-
-!! in clude npm/gulp install bit
---https://blog.bitscry.com/2018/03/13/using-npm-and-gulp-in-visual-studio-2017/
--- install powershell tools
--- install nodejs
--- run npm install gulp -g
-*/
-//
 namespace Razor_MailClient.Pages
 {
     public class indexModel : PageModel
@@ -48,7 +17,7 @@ namespace Razor_MailClient.Pages
         public List<Email> _emails { get; set; }
         public List<Folder> _folders { get; set; }
 
-        [BindProperty]
+        [BindProperty] // makes the round trip.
         public Email _readingEmail { get; set; }
         
         public int SELECTED_EMAIL_ID { get; set; }
@@ -99,6 +68,8 @@ namespace Razor_MailClient.Pages
 
             return RedirectToPage("/Index", new { id_email = temp.ID, id_folder = folder_id });
         }
+
+
         /// <summary>
         /// Delete a specific email.
         /// </summary>
@@ -177,6 +148,7 @@ namespace Razor_MailClient.Pages
         /// <returns></returns>
         public async Task<IActionResult> OnPostSendEmailAsync()
         {
+    
             Message = "Sending Email.";
 
             DataAccess data = new DataAccess();

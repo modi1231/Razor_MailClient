@@ -11,6 +11,7 @@ namespace Razor_MailClient.Data
     {
         public int ID { get; set; }
 
+        //[Required]
         [Display(Name = "To")]
         public string TO { get; set; }
 

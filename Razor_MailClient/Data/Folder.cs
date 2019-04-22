@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Razor_MailClient.Data
+﻿namespace Razor_MailClient.Data
 {
     /// <summary>
     /// Definining the base components of a 'folder'.

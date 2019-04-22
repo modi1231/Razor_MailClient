@@ -1,7 +1,10 @@
-﻿/// <binding BeforeBuild='_main_dev' />
+﻿/// <binding BeforeBuild='bootstrap_css, jquery' Clean='clean' />
+
 //task runner explorer
 //https://coursetro.com/posts/design/72/Installing-Bootstrap-4-Tutorial
 var gulp = require('gulp');
+var del = require('del');
+
 
 gulp.task('clean', function ()
 {
@@ -14,6 +17,12 @@ gulp.task('jquery', function ()
         .pipe(gulp.dest("wwwroot/js"));
 
     gulp.src(["node_modules/bootstrap/dist/js/bootstrap.min.js"])
+        .pipe(gulp.dest("wwwroot/js"));
+
+    gulp.src(["node_modules/jquery-validation/dist/jquery.validate.js"])
+        .pipe(gulp.dest("wwwroot/js"));
+
+    gulp.src(["node_modules/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js"])
         .pipe(gulp.dest("wwwroot/js"));
 });
 

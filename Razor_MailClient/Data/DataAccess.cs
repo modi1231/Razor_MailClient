@@ -12,12 +12,12 @@ namespace Razor_MailClient.Data
     {
         public async Task<List<Email>> LoadEmailListAsync(int id_folder)
         {
-            List<Email> temp = null;
+            List<Email> temp = new List<Email>();
 
             // Test data.  If '0' aka, 'inbox', then show stuff.  Else be empty.
             await Task.Run(() =>
             {
-                temp = new List<Email>();
+             
 
                 if (id_folder == 0)
                 {
@@ -52,13 +52,13 @@ namespace Razor_MailClient.Data
 
         public async Task<List<Folder>> LoadFolderListAsync(int selected_folder)
         {
-            List<Folder> temp = null;
+            List<Folder> temp = new List<Folder>();
 
             // test data.  Could be expanded to include sub folders, junk mail, etc.
             // conceptually 0 is 'inbox'
             await Task.Run(() =>
             {
-                temp = new List<Folder>();
+               
                 temp.Add(new Folder()
                 {
                     ID = 0,
@@ -83,9 +83,7 @@ namespace Razor_MailClient.Data
                     }
                 }
 
-            });
-
-            
+            });                      
 
             return temp;
         }
